@@ -6,6 +6,7 @@ import LoginLogoutButton from "@/components/Server/LoginLogoutButton";
 import ProfileButton from "@/components/client/ProfileButton";
 
 const exo2 = Exo_2({ subsets: ["latin"],weight: ["600", "700"],});
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
 
