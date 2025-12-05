@@ -9,17 +9,20 @@ export const runtime = "nodejs";
 // Always fresh DB reads
 export const dynamic = "force-dynamic";
 
+type AilmentParams = { slug: string };
+
 export async function GET(
   _req: Request,
-  ctx: { params: { slug: string } }
+  ctx: { params: Promise<AilmentParams> }
 ) {
   try {
-    const raw = ctx.params?.slug;
+    // params is now a Promise in Next 15
+    const { slug: raw } = await ctx.params;
+
     if (!raw) {
       return NextResponse.json({ error: "Missing slug" }, { status: 400 });
     }
 
-    // if slugs contain encoded spaces etc.
     const slug = decodeURIComponent(raw);
 
     const data = await getAilmentBySlugWithRemedies(slug);
@@ -30,7 +33,10 @@ export async function GET(
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
     console.error("GET /api/ailments/[slug] error:", err);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
