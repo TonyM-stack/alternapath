@@ -1,15 +1,22 @@
 
-export default async function UserPage({ params }: { params: { id: string } }) {
-  console.log(params.id); // "1", "abc123", etc.
 
-  //  fetch the specific user
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${params.id}`);
-  const user = await res.json();
+type UserPageParams = { id: string };
+
+export default async function UserPage({
+  params,
+}: {
+  params: Promise<UserPageParams>;
+}) {
+  const { id } = await params;
+
+  // your existing logic here, e.g.:
+  // const user = await getUserById(id);
+  // if (!user) return <div>User not found</div>;
 
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">{user.name}</h1>
-      <p className="text-gray-600">{user.email}</p>
+    <main className="...">
+      {/* render your user with that id */}
     </main>
   );
 }
+
