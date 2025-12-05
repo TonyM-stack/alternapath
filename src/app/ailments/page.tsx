@@ -12,6 +12,7 @@ import ProfileButton from "@/components/client/ProfileButton";
 // type AilmentRow = { ailment_slug: string; ailment_title: string };
 
 export const metadata = { title: "Ailments • Alternapath" };
+export const dynamic = "force-dynamic";
 const exo2 = Exo_2 ({subsets: ["latin"], weight: ["600", "700"],});
 
 
