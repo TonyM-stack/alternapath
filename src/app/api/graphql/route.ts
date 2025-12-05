@@ -2,19 +2,20 @@ import { createYoga, createSchema } from "graphql-yoga";
 import { typeDefs } from "@/graphql/schema";
 import { resolvers } from "@/graphql/resolvers";
 
-
 const yoga = createYoga({
   schema: createSchema({ typeDefs, resolvers }),
-  graphqlEndpoint: "/api/graphql",   // must match this route’s path
-  // GraphiQL is auto-enabled in dev; you can force it:
-  // graphiql: true,
+  graphqlEndpoint: "/api/graphql", // must match this route’s path
+  fetchAPI: { Request, Response }, // helps Yoga work in this runtime
 });
 
-// Export web handlers so Next can respond to GET/POST/OPTIONS
-export { yoga as GET, yoga as POST, yoga as OPTIONS };
+// Yoga exposes a fetch-style handler function
+const { handleRequest } = yoga;
 
+// Export handler functions so Next can respond to GET/POST/OPTIONS
+export { handleRequest as GET, handleRequest as POST, handleRequest as OPTIONS };
 
-export const runtime = "nodejs"; // or "edge"
+export const runtime = "nodejs"; // or "edge" if you prefer
+
 
 
 
