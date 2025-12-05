@@ -1,20 +1,33 @@
+
 import { createYoga, createSchema } from "graphql-yoga";
 import { typeDefs } from "@/graphql/schema";
 import { resolvers } from "@/graphql/resolvers";
 
 const yoga = createYoga({
   schema: createSchema({ typeDefs, resolvers }),
-  graphqlEndpoint: "/api/graphql", // must match this route’s path
-  fetchAPI: { Request, Response }, // helps Yoga work in this runtime
+  graphqlEndpoint: "/api/graphql", // must match route path
+  fetchAPI: { Request, Response },
 });
 
-// Yoga exposes a fetch-style handler function
-const { handleRequest } = yoga;
+export const runtime = "nodejs";
 
-// Export handler functions so Next can respond to GET/POST/OPTIONS
-export { handleRequest as GET, handleRequest as POST, handleRequest as OPTIONS };
+// Wrap Yoga so Next sees a standard `(request: Request) => Response` handler
 
-export const runtime = "nodejs"; // or "edge" if you prefer
+export async function GET(request: Request) {
+  const handler: any = yoga;           // avoid type clash with Yoga's context arg
+  return handler(request);
+}
+
+export async function POST(request: Request) {
+  const handler: any = yoga;
+  return handler(request);
+}
+
+export async function OPTIONS(request: Request) {
+  const handler: any = yoga;
+  return handler(request);
+}
+
 
 
 
