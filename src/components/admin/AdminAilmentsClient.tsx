@@ -94,11 +94,11 @@ export default function AdminAilmentsClient({
     await saveAilment(updated);
   }
 
-  async function handleDelete(id: number) {
+  async function handleDelete(ailmentId: number) {
     if (!confirm("Delete this ailment? This cannot be undone.")) return;
-    const res = await fetch(`/api/ailments/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/ailments/${ailmentId}`, { method: "DELETE" });
     if (res.ok) {
-      setAilments((prev) => prev.filter((a) => a.ailment_id !== id));
+      setAilments((prev) => prev.filter((a) => a.ailment_id !== ailmentId));
     }
   }
 

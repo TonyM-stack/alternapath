@@ -1,5 +1,5 @@
 
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest} from "next/server";
 import { getAilmentBySlugWithRemedies } from "@/lib/data";
 import { requireAdmin } from "@/lib/auth.server";
 import { updateAilmentAdmin, getAilmentBySlugAdmin, deleteAilmentAdmin } from "@/lib/data";
@@ -9,21 +9,22 @@ export const runtime = "nodejs";
 // Always fresh DB reads
 export const dynamic = "force-dynamic";
 
-type AilmentParams = { slug: string };
+type AilmentParams = { id: string };
 
+// GET /api/ailments/[id]  (get ailment details and remedies)
 export async function GET(
-  _req: Request,
-  ctx: { params: Promise<AilmentParams> }
+  _req: NextRequest,
+     {params }: { params: Promise<AilmentParams> }
 ) {
   try {
-    // params is now a Promise in Next 15
-    const { slug: raw } = await ctx.params;
+    // params is now a Promise in Next 15, 
+    const {id} = await params;
 
-    if (!raw) {
+    if (!id) {
       return NextResponse.json({ error: "Missing slug" }, { status: 400 });
     }
 
-    const slug = decodeURIComponent(raw);
+    const slug = decodeURIComponent(id);
 
     const data = await getAilmentBySlugWithRemedies(slug);
     if (!data) {
@@ -32,7 +33,7 @@ export async function GET(
 
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
-    console.error("GET /api/ailments/[slug] error:", err);
+    console.error("GET /api/ailments/[id] error:", err);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
@@ -40,17 +41,22 @@ export async function GET(
   }
 }
 
+// PUT /api/ailments/[id]  (update ailment – admin only)
 export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  req: NextRequest,
+  { params }: { params: Promise<AilmentParams> }
 ) {
   await requireAdmin();
 
-  const { slug } = await params;
-  const body = await req.json();
+  const { id } = await params;
+  if (!id) {
+    return NextResponse.json({ error: "Missing ailment id" }, { status: 400 });
+  }
 
+  const body = await req.json();
+  const slug = decodeURIComponent(id);
   const updated = await updateAilmentAdmin({
-    slug,
+    slug,         // current slug
     newTitle: body.title,
     newSlug: body.slug,
     isActive: body.isActive,
@@ -63,10 +69,10 @@ export async function PUT(
   return NextResponse.json({ ailment: updated });
 }
 
-type RouteParams = { id: string };
+// type AilmentParams = { id: string };
 
 export async function DELETE(_req: Request,
-  { params }: { params: Promise<RouteParams> }
+  { params }: { params: Promise<AilmentParams> }
 ) {
   await requireAdmin();
 
