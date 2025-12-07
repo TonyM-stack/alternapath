@@ -274,13 +274,13 @@ export async function updateAilmentAdmin({
 // }
 
 
-export async function deleteAilmentAdmin(slug: string) {
+export async function deleteAilmentAdmin(ailmentId: number) {
   await pool.query(
     `
     DELETE FROM ailments
-    WHERE ailment_slug = $1
+    WHERE ailment_id = $1
     `,
-    [slug]
+    [ailmentId]
   );
 }
 

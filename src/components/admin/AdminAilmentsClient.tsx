@@ -94,11 +94,11 @@ export default function AdminAilmentsClient({
     await saveAilment(updated);
   }
 
-  async function handleDelete(slug: string) {
+  async function handleDelete(id: number) {
     if (!confirm("Delete this ailment? This cannot be undone.")) return;
-    const res = await fetch(`/api/ailments/${slug}`, { method: "DELETE" });
+    const res = await fetch(`/api/ailments/${id}`, { method: "DELETE" });
     if (res.ok) {
-      setAilments((prev) => prev.filter((a) => a.ailment_slug !== slug));
+      setAilments((prev) => prev.filter((a) => a.ailment_id !== id));
     }
   }
 
@@ -232,7 +232,7 @@ export default function AdminAilmentsClient({
                   {a.is_active ? "Deactivate" : "Activate"}
                 </button>
                 <button
-                  onClick={() => handleDelete(a.ailment_slug)}
+                  onClick={() => handleDelete(a.ailment_id)}
                   className="px-3 py-1 rounded-md text-xs font-medium bg-red-600 text-white hover:bg-red-700"
                 >
                   Delete

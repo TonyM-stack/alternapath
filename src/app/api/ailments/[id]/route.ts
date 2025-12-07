@@ -63,17 +63,38 @@ export async function PUT(
   return NextResponse.json({ ailment: updated });
 }
 
-export async function DELETE(
-  _req: Request,
-  { params }: { params: Promise<{ slug: string }> }
+type RouteParams = { id: string };
+
+export async function DELETE(_req: Request,
+  { params }: { params: Promise<RouteParams> }
 ) {
   await requireAdmin();
 
-  const { slug } = await params;
-  const deleted = await deleteAilmentAdmin(slug);
+  const { id } = await params;
+  const ailmentId = Number(id);
+
+  if (!ailmentId || Number.isNaN(ailmentId)) {
+    return NextResponse.json(
+      { error: "Invalid ailment id" },
+      { status: 400 }
+    );
+  }
+
+  await deleteAilmentAdmin(ailmentId);
 
   return NextResponse.json({ message: "Ailment deleted" });
 }
+
+// export async function DELETE( _req: Request,
+//   { params }: { params: Promise<{ id: number }> }
+// ) {
+//   await requireAdmin();
+
+//   const { id } = await params;
+//   const deleted = await deleteAilmentAdmin(id);
+
+//   return NextResponse.json({ message: "Ailment deleted" });
+// }
 
 
 // import { NextResponse } from "next/server";
