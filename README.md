@@ -14,11 +14,26 @@ Auth: Custom JWT + HTTP-only cookies
 Testing: Playwright E2E tests
 Deployment: Render (Web Service + managed PostgreSQL)
 
-# Admin Access for Reviewers #
-If you are reviewing this project and need admin access, please contact me directly for temporary credentials.
+* DEMO ADMIN ACCOUNT (FOR REVIEW)
+- URL: https://www.alternapath.com
+- Admin email: tmart1221
+- Admin password: ********  Contact me for password
 
-
+> Note: This account has full admin privileges. Do not use it for real data.
 ---
+
+## Deployment
+
+This project is deployed on [Render](https://render.com).
+
+- Production URL: https://alternapath.onrender.com
+- Custom domain: https://www.alternapath.com
+
+# Environment variables 
+
+See `.env.example` for required variables.
+--
+
 ## User-facing
 
 - 🔍 **Search ailments & remedies**
@@ -58,6 +73,12 @@ If you are reviewing this project and need admin access, please contact me direc
     - New or existing remedy
     - Linking them together
 
+---
+
+Sources:
+   - Springboard Projects
+   - MDN
+   - ChatGpt
 ---
 
 #### Project Structure
@@ -138,7 +159,6 @@ src/
       session/
           route.ts          # GET cookie for user session
         
-
   components/
     admin/
       AdminAilmentsClient.tsx
